@@ -10,7 +10,7 @@ const mainController = {
       return;
     }
     try {
-      const _cities = Http.get('http://localhost:3051/sdfsdfsdf').then(res => res.data);
+      const _cities = Http.get('http://localhost:3051/cities').then(res => res.data);
       const _countries = Http.get('http://localhost:3052/countries').then(res => res.data);
       const [cities, countries] = await Promise.all([_cities, _countries]);
       try {

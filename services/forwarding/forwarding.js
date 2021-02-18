@@ -3,19 +3,14 @@
 const express = require('express');
 // const bodyParser = require('body-parser');
 
-const { getCountries } = require('./countries.controller');
+const { get } = require('./forwarding.controller');
 
 // express init
 const app = express();
-const port = 3052;
-
-const errorMiddleware = (req, res) => {
-  res.status(404).send('Invalid URL');
-};
+const port = 3054;
 
 // express routing
-app.get('/countries', getCountries);
-app.get('*', errorMiddleware)
+app.get('/', get);
 
 // express listen on port
 app.listen(port, () => {
