@@ -23,7 +23,7 @@ const blockIPMiddleware = (req, res, next) => {
 app.use(blockIPMiddleware);
 
 // server static files through express
-app.use('/', express.static(staticPath, { fallthrough: false }))
+app.use('/', express.static(staticPath, { fallthrough: false }));
 
 // express listen on port
 app.listen(port, () => {
