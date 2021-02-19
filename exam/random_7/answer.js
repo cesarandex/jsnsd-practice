@@ -28,16 +28,17 @@ const controller = {
       res.sendStatus(400);
       return;
     } else {
+      if (queryLength > 1) {
+        res.sendStatus(406);
+        return;
+      }
+      // This should be an integer validation, instead of a number one
       const isNumber = !isNaN(digit);
       if (!isNumber) {
         res.sendStatus(400);
         return;
       }
       digit = +digit;
-      if (queryLength > 1) {
-        res.sendStatus(406);
-        return;
-      }
       if (digit > 50) {
         res.sendStatus(413);
         return;

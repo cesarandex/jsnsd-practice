@@ -25,6 +25,21 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 
+// dictionary that will hold the number of attempts per IP
+const attempts = {};
+
+// middleware linked to a dictionary that will stop requests after too many invalid attempts
+const securityMiddleware = (req, res, next) => {
+  if(attempts[req.ip] >= 3) {
+    res.sendStatus(500);
+  } else {
+    next();
+  }
+}
+
+// set up security middleware
+app.use(securityMiddleware);
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -48,6 +63,8 @@ const controller = {
         if (result) {
           res.sendStatus(200);
         } else {
+          if (attempts[req.ip]) attempts[req.ip]++;
+          else attempts[req.ip] = 1;
           res.sendStatus(401);
         }
         return;
