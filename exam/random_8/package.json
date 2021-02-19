@@ -9,5 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "UNLICENSED",
-  "dependencies": {}
+  "dependencies": {
+    "bcrypt": "^5.0.0"
+  }
 }
