@@ -1,13 +1,13 @@
 # OpenJS Node.js Services Developer (JSNSD)
 
 ##### NodeJS
-Imports y exports con módulos
+Modules import and export
 ```js
 const x = require('dependency');
 module.exports = y;
 ```
 
-Manejo de ficheros
+Handling files
 ```js
 const fs = require('fs').promises;
 const countriesPath = path.join(__dirname, 'countries.json');
@@ -21,7 +21,7 @@ JSON.stringify(fileContent)
 fs.writeFile(outputPath, fileContent);
 ```	
 
-Axios para requests
+Instantiating axios
 ```js
 const Http = axios.create();
 await Http.get('http://localhost:3000')
@@ -29,7 +29,7 @@ await Http.get('http://localhost:3000')
 <br>
 
 ##### Express
-Dependencias y configuración básica
+Dependencies and basic configuration
 ```js
 'use strict'
 
@@ -50,7 +50,7 @@ app.listen(port, () => {
 });
 ```
 
-Configuración body parser
+Body parser configuration
 
 ```js
 const bodyParser = require('body-parser');
@@ -62,23 +62,23 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 ```
 
-Configuración de middleware
+Middleware configuration
 ```js
 const middleware = (_req, _res, next) => {
 	// Middleware logic
 	next();
 }
-app.use(middleware);
-app.use('/path', middleware);
+app.use(middleware); // general
+app.use('/path', middleware); // path related
 ```
 
-Configuración de handlers y rutas
+Routing and handlers
 ```js
 app.get('/', controllerMethod);
 app.post('/path', specificMiddleware, controllerMethod); // middleware being optional
 ```
 
-Ruta por defecto
+Default route
 ```js
 // create default error middleware
 const errorMiddleware = (_req, res) => {
@@ -91,41 +91,41 @@ app.get('*', errorMiddleware)
 ```
 
 
-Parámetros de requests, path y query
+Path and query parameters
 ```js
 app.get('/:id', controllerMethod);
-const pathParam = req.param.id;
+const pathParam = req.params.id;
 const queryParam = req.query.id;
 ```
 
-Manejo de errores y propagación de estos
+Handling and forwarding errors
 ```js
 catch (err) {
 	res.sendStatus(500); // OR
-  	res.status(404).send(err);
+	res.status(404).send(err);
 }
 ```
 
-Servicio de ficheros estáticos
+Static file system
 ```js
 const path = require('path');
 const staticPath = path.join(__dirname, 'public');
 app.use('/', express.static(staticPath, { fallthrough: false }));
 ```
 
-Concatenación de respuestas de múltiples servicios (Promise.all)
+Consuming multiple services
 ```js
 const _cities = Http.get('http://localhost:3051/cities').then(res => res.data);
 const _countries = Http.get('http://localhost:3052/countries').then(res => res.data);
 const [cities, countries] = await Promise.all([_cities, _countries]);
 ```
 
-Gestionar servicio índice y EP base
+Handle invalid paths
 ```js
 app.get('*', handler); // como último servicio
 ```
 
-Propagación de peticiones
+Request forwarding
 ```js
 // use default http for forwarding
 const Http = require('http');
@@ -134,12 +134,12 @@ const Http = require('http');
 const url = new URL(urlParam);
 
 const reqOpts = {
-    port: url.port || 80,
-    path: url.pathname || '/',
-    protocol: url.protocol || 'http:',
-    hostname: url.hostname,
-    method: req.method,
-    headers: req.headers,
+	port: url.port || 80,
+	path: url.pathname || '/',
+	protocol: url.protocol || 'http:',
+	hostname: url.hostname,
+	method: req.method,
+	headers: req.headers,
 }
 
 // create the http connector
@@ -151,18 +151,14 @@ const connector = Http.request(reqOpts, response => {
 req.pipe(connector).on('error', err => res.status(500).send(err))
 ```
 
-Middlewares básicos de seguridad
+Basic security middlewares
 ```js
 req.headers['x-skip-request']
 	? res.status(403).json({ error: 'The request has been skipped' })
 	: next()
-
-req.ip === '123.123.123.123'
-    ? res.status(500).send('Stop DDOS pls')
-    : next()
 ```
 
-Middleware de autenticación
+Authentication middleware
 ```js
 const validateUserAccess = (req, res, next) => {
 	const tokenHeader = req.headers['authorization'];
@@ -184,24 +180,17 @@ const validateUserAccess = (req, res, next) => {
 ```
 
 
-**Recordatorio: El orden de los middlewares y controladores es muy importante**
-<br>
+**Reminder: Handler and middleware order is essential**
 
-##### JS Commons
-Promises
-```
-Promises and Promise.all
-Array iterators: map, forEach, reduce, indexOf, _filter, _find
-```
 <br>
 
 ##### Exam environment
-Hacer peticiones con CURL
+CURL requests
 ```
 Base:
 curl -X GET/POST -H Header1 -H Header2 https://url.com
 
-Headers comunes:
+Common headers:
 	-H 'Accept: application/json'
 	-H 'Content-Type: application/json'
 	-H 'Authorization: Bearer eyJhb...ghLA'
@@ -209,31 +198,38 @@ Headers comunes:
 POST:
 	--data '{"prop1": "value", "prop2": true}'
 
-Ejemplo completo:
+Full example:
 curl -H 'Accept: application/json' -H "Authorization: Bearer eyJhb...ghLA" http://localhost:3000/api/countries
 ```
 
-APIs útiles
+Useful APIs
 ```
 NodeJS
 Express
 JS Mozilla
 ```
 
-Dependencias utilizadas habitualmente
+Common dependencies
 ```
 express
 body-parser
 axios
+fs
+crypto/bcrypt
 ```
-
-Debuggear app en VSCode directamente
-
-_Version de NodeJS: 14 LTS_
 
 <br>
 
-##### Pending
-- Versiones y pruebas
-- Conexión desde el portátil de Everis (instalar plugin, actualizar portátil y probar)
-- Operadores package.json
+Credit to:
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/damoresa"><img src="https://avatars.githubusercontent.com/u/12097023?s=460&u=47c9e20316120d24e0a8c83743eb056e3757b5dc&v=4" width="60" alt="damoresa"/><br /><sub><b>damoresa</b></sub></a></td>
+    <td align="center"><a href="https://github.com/edsadr"><img src="https://avatars.githubusercontent.com/u/1189785?s=460&v=4" width="60" alt="edsadr"/><br /><sub><b>edsadr</b></sub></a></td>
+    <td align="center"><a href="https://github.com/moialbla"><img src="https://avatars.githubusercontent.com/u/14232214?s=460&u=854e29ed6552b22200b46c07f83bf44b58e92240&v=4" width="60" alt="moialbla"/><br /><sub><b>moialbla</b></sub></a></td>
+    <td align="center"><a href="https://github.com/agarciabz"><img src="https://avatars.githubusercontent.com/u/27777512?s=460&u=b03eec76be45fe3fa8a141f530bf7f9deb8b8b19&v=4" width="60" alt="agarciabz"/><br /><sub><b>agarciabz</b></sub></a></td>
+  </tr>
+</table>
+
+Daniel for the Everis JSNSD training
+Adrián Estrada for his interviews and gist with exercises to practice with
+Moisés and Agustin for taking the course with me 😀
