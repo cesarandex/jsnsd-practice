@@ -1,8 +1,12 @@
-const cities = require('./cities.json');
+const fs = require('fs').promises;
+const path = require('path');
+
+const citiesPath = path.join(__dirname, 'cities.json');
 
 const citiesController = {
-  getCities: (_req, res) => {
-    res.json(cities);
+  getCities: async (_req, res) => {
+    const cities = await fs.readFile(citiesPath, 'utf-8');
+    res.json(JSON.parse(cities));
   },
 }
 

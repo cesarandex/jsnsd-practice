@@ -1,6 +1,3 @@
-// axios dependency and init
-// const axios = require('axios');
-// const Http = axios.create();
 const Http = require('http');
 
 /**
@@ -13,32 +10,36 @@ const forwardingController = {
   get: async (req, res) => {
     const urlParam = req.query.url;
     if (urlParam) {
-      const url = new URL(urlParam);
-      // Redirect option: res.redirect('https://app.example.io');
+      try {
+        const url = new URL(urlParam);
+
+        const reqOpts = {
+          port: url.port || 80,
+          path: url.pathname || '/',
+          protocol: url.protocol || 'http:',
+          hostname: url.hostname,
+          method: req.method,
+          headers: req.headers,
+        }
   
-      const reqOpts = {
-        port: url.port || 80,
-        path: url.pathname || '/',
-        protocol: url.protocol || 'http:',
-        hostname: url.hostname,
-        method: req.method,
-        headers: req.headers,
+        /**
+         * Connector request will propagate the body headers and query params to the target site.
+         * On completion, it will forward the response to the original response.
+         * 
+         * Redirect option: res.redirect('https://app.example.io');
+         */
+  
+        const connector = Http.request(reqOpts, response => {
+          // response.writeHead(res.statusCode, res.headers);
+          response.pipe(res).on('error', err => res.status(500).send(err))
+        });
+  
+        // Pipe the original request into the connector
+        req.pipe(connector).on('error', err => res.status(500).send(err))
+      } catch {
+        res.status(400).send('Invalid URL')
       }
-
-      /**
-       * Connector request will propagate the body headers and query params to the target site.
-       * On completion, it will forward the response to the original response.
-       */
-
-      const connector = Http.request(reqOpts, response => {
-        // response.writeHead(res.statusCode, res.headers);
-        response.pipe(res).on('error', err => res.status(500).send(err))
-      });
-
-      // Pipe the original request into the connector
-      req.pipe(connector).on('error', err => res.status(500).send(err))
     } else {
-      // TODO: Validate url?
       res.status(400).send('Missing forwarding URL query param');
     }
   }

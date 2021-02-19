@@ -1,7 +1,6 @@
 'use strict'
 
 const express = require('express');
-// const bodyParser = require('body-parser');
 
 const { getCountries } = require('./countries.controller');
 
@@ -9,7 +8,8 @@ const { getCountries } = require('./countries.controller');
 const app = express();
 const port = 3052;
 
-const errorMiddleware = (req, res) => {
+// create default error middleware
+const errorMiddleware = (_req, res) => {
   res.status(404).send('Invalid URL');
 };
 
