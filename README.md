@@ -230,6 +230,6 @@ Credit to:
   </tr>
 </table>
 
-Daniel for the Everis JSNSD training
-Adrián Estrada for his interviews and gist with exercises to practice with
-Moisés and Agustin for taking the course with me 😀
+- Daniel for the Everis JSNSD training
+- Adrián Estrada for his interviews and gist with exercises to practice with
+- Moisés and Agustin for taking the course with me 😀
